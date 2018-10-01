@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<script>
+let target, sprites, png
+window.addEventListener('load', () => {
+  sprites = document.getElementById('sprites')
+  target = document.location.href.split('?')[1]
+  if(!target) target = 'https://openmaptiles.github.io/osm-bright-gl-style/sprite.json'
+  png = target.replace(/json$/, 'png')
+  
+  sprites.insertAdjacentHTML('beforeend', `<h2>${target}</h2>`)
+  fetch(target).then((response) => {
+    return response.json()
+  }).then((json) => {
+    for (let key of Object.keys(json)) {
+      const config = json[key]
+      let element = document.createElement('div')
+      element.style.display = 'inline-block'
+      element.style.width = `${config.width}px`
+      element.style.height = `${config.height}px`
+      element.style.background = `url(${png}) -${config.x}px -${config.y}px`
+      sprites.insertAdjacentElement('beforeend', element)
+      sprites.insertAdjacentHTML('beforeend', `${key}<br>`)
+    }
+  })
+})
+</script>
+</head>
+<body>
+<div id='sprites'></div>
+</body>
+</html>
